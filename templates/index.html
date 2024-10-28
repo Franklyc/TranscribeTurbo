@@ -249,13 +249,22 @@
             processingProgressText.textContent = `Processing chunk ${current} of ${total}`;
         }
 
-        function createTimelineSegment(text, startTime, endTime) {
+        function createTimelineSegment(text, startTime, endTime, startSeconds) {
             const segment = document.createElement('div');
             segment.className = 'timeline-segment p-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
             segment.innerHTML = `
                 <span class="text-sm text-gray-500 dark:text-gray-400">${startTime} - ${endTime}</span>
                 <p class="text-gray-700 dark:text-gray-300">${text}</p>
             `;
+            
+            // Add click event to jump to the corresponding time in the audio
+            segment.addEventListener('click', () => {
+                if (audioPlayer) {
+                    audioPlayer.currentTime = startSeconds;
+                    audioPlayer.play();
+                }
+            });
+            
             return segment;
         }
 
@@ -277,7 +286,8 @@
                     const timelineSegment = createTimelineSegment(
                         segment.text,
                         new Date(segment.start * 1000).toISOString().substr(11, 8),
-                        new Date(segment.end * 1000).toISOString().substr(11, 8)
+                        new Date(segment.end * 1000).toISOString().substr(11, 8),
+                        segment.start // Pass the start time in seconds
                     );
                     timeline.appendChild(timelineSegment);
                 });
