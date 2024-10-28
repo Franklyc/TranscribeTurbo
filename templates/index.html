@@ -42,11 +42,11 @@
                                 <svg class="w-8 h-8 text-blue-500 dark:text-blue-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                 </svg>
-                                <span class="mt-2 text-sm text-gray-600 dark:text-gray-400">Drag and drop audio file here or click to select</span>
+                                <span class="mt-2 text-sm text-gray-600 dark:text-gray-300">Drag and drop audio file here or click to select</span>
                                 <input type="file" id="audioFile" class="hidden" accept=".wav,.mp3,.ogg,.m4a" />
                             </label>
                         </div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
+                        <div class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
                             <p id="selectedFileName">No file selected</p>
                             <p id="fileSize" class="text-xs mt-1"></p>
                             <p class="text-xs mt-1">Files larger than 19.5MB will be automatically split into chunks for processing</p>
@@ -65,7 +65,7 @@
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div id="uploadProgressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                             </div>
-                            <p id="uploadProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-400">0%</p>
+                            <p id="uploadProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-300">0%</p>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                             <div id="processingProgressBar" class="bg-green-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
-                        <p id="processingProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-400">Processing chunk 0 of 0</p>
+                        <p id="processingProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-300">Processing chunk 0 of 0</p>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Transcription Result</h2>
                     
                     <!-- Timeline View -->
-                    <div id="timelineView" class="mb-4 overflow-x-auto">
+                    <div id="timelineView" class="mb-4 overflow-x-auto dark:bg-gray-900">
                         <div id="timeline" class="min-w-full">
                             <!-- Timeline segments will be added here dynamically -->
                         </div>

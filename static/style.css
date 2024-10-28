@@ -15,17 +15,48 @@ body {
 }
 
 .dark body {
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
 }
 
 .container {
     animation: fadeIn 0.5s ease-in;
 }
 
+/* Main title styling */
+h1.text-gray-800.dark\:text-white {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Card styling */
+.bg-white.dark\:bg-gray-800 {
+    background-color: #ffffff;
+}
+
+.dark .bg-white.dark\:bg-gray-800 {
+    background-color: #1f2937;
+}
+
 /* File upload button hover effects */
 label.border-blue-500:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Success message styling */
+.bg-green-100 {
+    background-color: #dcfce7;
+}
+
+.dark .bg-green-100 {
+    background-color: #064e3b;
+}
+
+.text-green-700 {
+    color: #15803d;
+}
+
+.dark .text-green-700 {
+    color: #6ee7b7;
 }
 
 /* Smooth transitions */
@@ -68,6 +99,7 @@ audio {
     width: 100%;
     height: 40px;
     margin: 10px 0;
+    border-radius: 8px;
 }
 
 audio::-webkit-media-controls-panel {
@@ -75,12 +107,67 @@ audio::-webkit-media-controls-panel {
 }
 
 .dark audio::-webkit-media-controls-panel {
-    background-color: #374151;
+    background-color: #1f2937;
+}
+
+.dark audio::-webkit-media-controls-current-time-display,
+.dark audio::-webkit-media-controls-time-remaining-display {
+    color: #e5e7eb;
+}
+
+.dark audio::-webkit-media-controls-play-button,
+.dark audio::-webkit-media-controls-mute-button,
+.dark audio::-webkit-media-controls-volume-slider {
+    filter: invert(1);
 }
 
 /* Progress bars */
 .progress-bar {
     transition: width 0.3s ease;
+}
+
+/* File upload area */
+#dropZone {
+    border: 2px dashed #3b82f6;
+    background-color: #ffffff;
+}
+
+.dark #dropZone {
+    border-color: #60a5fa;
+    background-color: #1f2937;
+}
+
+#dropZone:hover {
+    border-color: #2563eb;
+    background-color: #f8fafc;
+}
+
+.dark #dropZone:hover {
+    border-color: #93c5fd;
+    background-color: #374151;
+}
+
+/* Text colors in dark mode */
+.dark .text-gray-600,
+.dark .text-gray-700 {
+    color: #e5e7eb;
+}
+
+.dark .text-gray-500 {
+    color: #9ca3af;
+}
+
+/* Background colors in dark mode */
+.dark .bg-gray-50 {
+    background-color: #111827;
+}
+
+.dark .bg-gray-100 {
+    background-color: #1f2937;
+}
+
+.dark .bg-gray-200 {
+    background-color: #374151;
 }
 
 /* Responsive text sizing */
@@ -143,4 +230,49 @@ audio::-webkit-media-controls-panel {
 
 .dark #timelineView {
     border-color: #4a5568;
+    background-color: #111827;
+}
+
+/* Form elements in dark mode */
+.dark select,
+.dark input[type="text"],
+.dark input[type="number"] {
+    background-color: #1f2937;
+    color: #e5e7eb;
+    border-color: #4b5563;
+}
+
+.dark select option {
+    background-color: #1f2937;
+    color: #e5e7eb;
+}
+
+/* Success and error messages in dark mode */
+.dark .bg-green-100 {
+    background-color: #064e3b;
+}
+
+.dark .border-green-400 {
+    border-color: #059669;
+}
+
+.dark .text-green-700 {
+    color: #6ee7b7;
+}
+
+/* Transcription text area in dark mode */
+.dark #transcriptionText {
+    background-color: #111827;
+    color: #e5e7eb;
+    border-color: #374151;
+}
+
+/* Timeline segments in dark mode */
+.dark .timeline-segment {
+    border-color: #374151;
+    color: #e5e7eb;
+}
+
+.dark .timeline-segment:hover {
+    background-color: #1f2937;
 }
