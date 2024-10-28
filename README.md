@@ -1,154 +1,89 @@
 # Audio Transcription Service
 
-A modern web application for transcribing audio files using the Groq API. Supports multiple languages and provides a user-friendly interface for audio file uploads and transcription.
+A modern web application for transcribing audio files using the Groq API, featuring a user-friendly interface with multi-language support.
 
-## Features
+## Core Features
 
-- Support for multiple audio formats (WAV, MP3, OGG, M4A)
-- Multiple language support with automatic language detection
-- Modern, responsive user interface with smooth animations
-- Real-time transcription status updates and progress tracking
-- Automatic handling of large audio files (>19.5MB)
-- Easy-to-use file upload system with drag & drop support
-- Download transcription results as text file
-- Copy transcription to clipboard with one click
-- Detailed status updates during processing
-- Error handling with user-friendly messages
+- **Audio Support**
+  - Multiple formats: WAV, MP3, OGG, M4A
+  - Automatic handling of large files (>19.5MB) with smart chunking
+  - Audio preview before transcription
+  - No strict file size limit (tested up to 80MB)
 
-## Large File Handling
+- **User Interface**
+  - Drag & drop file upload with progress tracking
+  - Dark/Light mode with system preference detection
+  - Timeline view with timestamp navigation
+  - Responsive design for all devices
+  - Custom animations and transitions
+  - One-click copy and download options
 
-The application automatically handles large audio files:
-- Files up to 19.5MB are processed directly
-- Files larger than 19.5MB are automatically split into smaller chunks
-- Each chunk is processed separately with progress tracking
-- Results are seamlessly combined into a single transcription
-- No strict file size limit (tested with files up to 80MB)
+- **Processing**
+  - Real-time status updates
+  - Detailed progress tracking
+  - Automatic language detection
+  - Smart chunk processing for large files
+  - Comprehensive error handling
 
-## User Interface Features
+## Supported Languages
 
-- Drag & drop file upload support
-- File upload progress indication
-- Real-time processing status updates
-- Smooth animations for status changes
-- Clear error messages and handling
-- Responsive design for all screen sizes
-- Easy-to-use language selection
-- Download and copy options for transcription results
+English, Chinese, Spanish, French, German, Japanese, Korean, Russian, Italian, Portuguese
 
 ## Setup Instructions
 
-1. Install the required dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Create a `.env` file in the project root and add your Groq API key:
+2. Add Groq API key to `.env`:
    ```
    GROQ_API_KEY=your_api_key_here
    ```
 
-3. Run the application:
+3. Run application:
    ```bash
    python app.py
    ```
 
-4. Open your web browser and navigate to `http://localhost:5000`
+4. Visit `http://localhost:5000`
 
-## Supported Languages
-
-- English
-- Chinese
-- Spanish
-- French
-- German
-- Japanese
-- Korean
-- Russian
-- Italian
-- Portuguese
-
-## File Format Support
-
-The application supports the following audio formats:
-- WAV
-- MP3
-- OGG
-- M4A
-
-## Technical Details
+## Technical Overview
 
 ### Frontend
 - HTML5 with semantic markup
-- CSS using Tailwind CSS framework
-- Custom animations and transitions
-- JavaScript for dynamic interactions
-- Real-time status updates
-- Error handling and user feedback
-- Drag & drop file upload handling
+- Tailwind CSS with custom animations
+- Dynamic JavaScript interactions
+- Theme system with persistence
+- Timeline navigation
+- Audio preview system
+- Progress tracking UI
 
 ### Backend
-- Flask (Python) server
-- Groq Transcription API integration
-- pydub for audio processing
-- Efficient chunk processing for large files
+- Flask server
+- Groq API integration
+- Audio processing with pydub
+- Efficient chunk handling
 - Automatic file cleanup
-- Comprehensive error handling
 
-### Audio Processing
-- Automatic format detection
-- Smart chunking for large files
-- Progress tracking for each chunk
-- Efficient memory usage
-- Temporary file management
+### Additional Requirements
 
-## Error Handling
+FFmpeg installation required:
 
-The application includes comprehensive error handling for:
-- Invalid file formats
-- Upload failures
-- Processing errors
-- API communication issues
-- File size limitations
-- Network connectivity problems
+- Windows: Download from ffmpeg.org and add to PATH
+- Mac: `brew install ffmpeg`
+- Linux: `sudo apt-get install ffmpeg`
 
-## Performance Optimization
+### Security & Performance
 
-- Efficient chunk size calculation
-- Automatic cleanup of temporary files
-- Optimized memory usage for large files
-- Smooth animations and transitions
-- Responsive UI updates
-
-## Additional Requirements
-
-For audio processing, you'll need to install FFmpeg:
-
-### Windows
-1. Download FFmpeg from https://www.ffmpeg.org/download.html
-2. Add FFmpeg to your system PATH
-
-### Mac
-```bash
-brew install ffmpeg
-```
-
-### Linux
-```bash
-sudo apt-get install ffmpeg
-```
+- Secure file handling and cleanup
+- Input validation
+- API key protection
+- Optimized memory usage
+- Efficient chunk processing
+- Theme preference persistence
+- Responsive UI optimizations
 
 ## Browser Support
 
-The application is tested and supported on:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Security Considerations
-
-- Secure file handling
-- Temporary file cleanup
-- Input validation
-- Error logging
-- API key protection
+Chrome, Firefox, Safari, Edge (latest versions)

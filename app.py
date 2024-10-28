@@ -80,6 +80,7 @@ def transcribe():
             result = {
                 'success': True,
                 'text': transcription.text,
+                'segments': transcription.segments if hasattr(transcription, 'segments') else [],
                 'status': 'Transcription completed successfully'
             }
             print("Transcription result:", result)
@@ -97,6 +98,8 @@ def transcribe():
             
             print(f"Splitting into {num_chunks} chunks")
             combined_text = []
+            all_segments = []
+            current_offset = 0
             
             for i in range(num_chunks):
                 print(f"Processing chunk {i+1}/{num_chunks}")
@@ -122,6 +125,16 @@ def transcribe():
                     )
                 
                 combined_text.append(chunk_transcription.text)
+                
+                # Adjust segment timestamps and add to all_segments
+                if hasattr(chunk_transcription, 'segments'):
+                    for segment in chunk_transcription.segments:
+                        segment['start'] += current_offset
+                        segment['end'] += current_offset
+                        all_segments.append(segment)
+                
+                current_offset += (end_ms - start_ms) / 1000  # Convert to seconds
+                
                 os.remove(chunk_path)
                 print(f"Chunk {i+1} processed")
             
@@ -131,6 +144,7 @@ def transcribe():
             result = {
                 'success': True,
                 'text': ' '.join(combined_text),
+                'segments': all_segments,
                 'status': f'Successfully processed {num_chunks} chunks'
             }
             print("Final result:", result)

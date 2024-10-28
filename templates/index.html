@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +7,28 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen dark:bg-gray-900 transition-colors duration-200">
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto">
-            <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Audio Transcription Service</h1>
+            <!-- Theme Toggle -->
+            <div class="flex justify-end mb-4">
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition-colors duration-200">
+                    <svg id="sunIcon" class="w-6 h-6 text-yellow-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <h1 class="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">Audio Transcription Service</h1>
             
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                 <form id="uploadForm" class="space-y-6">
                     <div class="space-y-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Select Language</label>
-                        <select name="language" id="language" class="w-full p-2 border rounded-md">
+                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Select Language</label>
+                        <select name="language" id="language" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
                             {% for code, name in languages.items() %}
                             <option value="{{ code }}">{{ name }}</option>
                             {% endfor %}
@@ -24,21 +36,36 @@
                     </div>
 
                     <div class="space-y-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Upload Audio File</label>
+                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Upload Audio File</label>
                         <div class="flex items-center justify-center w-full">
-                            <label id="dropZone" class="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-lg tracking-wide border-2 border-blue-500 border-dashed cursor-pointer hover:bg-blue-50 transition-all duration-300">
-                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <label id="dropZone" class="w-full flex flex-col items-center px-4 py-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg tracking-wide border-2 border-blue-500 dark:border-blue-400 border-dashed cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-300">
+                                <svg class="w-8 h-8 text-blue-500 dark:text-blue-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                 </svg>
-                                <span class="mt-2 text-sm">Drag and drop audio file here or click to select</span>
+                                <span class="mt-2 text-sm text-gray-600 dark:text-gray-400">Drag and drop audio file here or click to select</span>
                                 <input type="file" id="audioFile" class="hidden" accept=".wav,.mp3,.ogg,.m4a" />
                             </label>
                         </div>
-                        <div class="text-sm text-gray-600 text-center mt-2">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 text-center mt-2">
                             <p id="selectedFileName">No file selected</p>
                             <p id="fileSize" class="text-xs mt-1"></p>
                             <p class="text-xs mt-1">Files larger than 19.5MB will be automatically split into chunks for processing</p>
                             <p class="text-xs mt-1">Supported formats: WAV, MP3, OGG, M4A</p>
+                        </div>
+
+                        <!-- Audio Preview -->
+                        <div id="audioPreview" class="hidden mt-4">
+                            <audio id="audioPlayer" controls class="w-full">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div id="uploadProgress" class="hidden mt-4">
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                <div id="uploadProgressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <p id="uploadProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-400">0%</p>
                         </div>
                     </div>
 
@@ -48,24 +75,39 @@
                 </form>
             </div>
 
-            <div id="statusContainer" class="hidden bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div id="statusContainer" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                 <div class="flex flex-col items-center space-y-4">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                     <div class="text-center">
-                        <p id="statusText" class="text-gray-700 font-semibold"></p>
-                        <p id="statusDetail" class="text-sm text-gray-500 mt-2"></p>
+                        <p id="statusText" class="text-gray-700 dark:text-gray-300 font-semibold"></p>
+                        <p id="statusDetail" class="text-sm text-gray-500 dark:text-gray-400 mt-2"></p>
+                    </div>
+                    <!-- Processing Progress -->
+                    <div id="processingProgress" class="w-full mt-4 hidden">
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div id="processingProgressBar" class="bg-green-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="processingProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-400">Processing chunk 0 of 0</p>
                     </div>
                 </div>
             </div>
 
             <div id="result" class="hidden">
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded relative mb-4">
                     <span class="block sm:inline">Transcription completed successfully!</span>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Transcription Result</h2>
-                    <div id="transcriptionText" class="text-gray-700 whitespace-pre-wrap mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200"></div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Transcription Result</h2>
+                    
+                    <!-- Timeline View -->
+                    <div id="timelineView" class="mb-4 overflow-x-auto">
+                        <div id="timeline" class="min-w-full">
+                            <!-- Timeline segments will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <div id="transcriptionText" class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"></div>
                     <div class="flex space-x-4">
                         <button id="downloadButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                             Download Transcription
@@ -77,15 +119,47 @@
                 </div>
             </div>
 
-            <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-8">
+            <div id="errorMessage" class="hidden bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-8">
                 <span id="errorText" class="block sm:inline"></span>
             </div>
         </div>
     </div>
 
     <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const html = document.documentElement;
+
+        function updateThemeIcons() {
+            const isDark = html.classList.contains('dark');
+            sunIcon.classList.toggle('hidden', !isDark);
+            moonIcon.classList.toggle('hidden', isDark);
+        }
+
+        // Check for saved theme preference or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+        updateThemeIcons();
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            updateThemeIcons();
+        });
+
+        // Drag and Drop
         const dropZone = document.getElementById('dropZone');
         const audioFile = document.getElementById('audioFile');
+        const audioPreview = document.getElementById('audioPreview');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const uploadProgressBar = document.getElementById('uploadProgressBar');
+        const uploadProgressText = document.getElementById('uploadProgressText');
 
         // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -111,11 +185,11 @@
         }
 
         function highlight(e) {
-            dropZone.classList.add('border-blue-600', 'bg-blue-50');
+            dropZone.classList.add('border-blue-600', 'bg-blue-50', 'dark:bg-gray-700');
         }
 
         function unhighlight(e) {
-            dropZone.classList.remove('border-blue-600', 'bg-blue-50');
+            dropZone.classList.remove('border-blue-600', 'bg-blue-50', 'dark:bg-gray-700');
         }
 
         function handleDrop(e) {
@@ -136,9 +210,15 @@
                     ? `${fileSizeMB}MB (Will be split into chunks for processing)`
                     : `${fileSizeMB}MB`;
                 document.getElementById('fileSize').textContent = `File size: ${sizeText}`;
+
+                // Show audio preview
+                const url = URL.createObjectURL(file);
+                audioPlayer.src = url;
+                audioPreview.classList.remove('hidden');
             } else {
                 document.getElementById('selectedFileName').textContent = 'No file selected';
                 document.getElementById('fileSize').textContent = '';
+                audioPreview.classList.add('hidden');
             }
         }
 
@@ -158,13 +238,54 @@
             statusDetail.textContent = detail;
         }
 
-        function showTranscription(text) {
+        function updateProcessingProgress(current, total) {
+            const processingProgress = document.getElementById('processingProgress');
+            const processingProgressBar = document.getElementById('processingProgressBar');
+            const processingProgressText = document.getElementById('processingProgressText');
+            
+            processingProgress.classList.remove('hidden');
+            const percentage = (current / total * 100).toFixed(0);
+            processingProgressBar.style.width = `${percentage}%`;
+            processingProgressText.textContent = `Processing chunk ${current} of ${total}`;
+        }
+
+        function createTimelineSegment(text, startTime, endTime) {
+            const segment = document.createElement('div');
+            segment.className = 'timeline-segment p-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+            segment.innerHTML = `
+                <span class="text-sm text-gray-500 dark:text-gray-400">${startTime} - ${endTime}</span>
+                <p class="text-gray-700 dark:text-gray-300">${text}</p>
+            `;
+            return segment;
+        }
+
+        function showTranscription(text, segments = []) {
             console.log('Showing transcription:', text);
             const resultContainer = document.getElementById('result');
             const transcriptionText = document.getElementById('transcriptionText');
+            const timeline = document.getElementById('timeline');
             
             transcriptionText.textContent = text;
             resultContainer.classList.remove('hidden');
+
+            // Clear existing timeline segments
+            timeline.innerHTML = '';
+            
+            // Add timeline segments if available
+            if (segments.length > 0) {
+                segments.forEach(segment => {
+                    const timelineSegment = createTimelineSegment(
+                        segment.text,
+                        new Date(segment.start * 1000).toISOString().substr(11, 8),
+                        new Date(segment.end * 1000).toISOString().substr(11, 8)
+                    );
+                    timeline.appendChild(timelineSegment);
+                });
+                document.getElementById('timelineView').classList.remove('hidden');
+            } else {
+                document.getElementById('timelineView').classList.add('hidden');
+            }
+
             // Add the show class to trigger the animation and make it visible
             setTimeout(() => {
                 resultContainer.classList.add('show');
@@ -211,6 +332,8 @@
             resultContainer.classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
             document.getElementById('statusContainer').classList.remove('hidden');
+            document.getElementById('processingProgress').classList.add('hidden');
+            uploadProgress.classList.remove('hidden');
 
             const formData = new FormData();
             formData.append('file', file);
@@ -222,7 +345,12 @@
 
                 const response = await fetch('/transcribe', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        uploadProgressBar.style.width = percentCompleted + '%';
+                        uploadProgressText.textContent = percentCompleted + '%';
+                    }
                 });
 
                 const data = await response.json();
@@ -239,12 +367,13 @@
                 // Update status with success message
                 updateStatus('Processing complete', data.status);
 
-                // Show transcription result
-                showTranscription(data.text);
+                // Show transcription result with timeline if available
+                showTranscription(data.text, data.segments || []);
 
                 // Hide status after showing result
                 setTimeout(() => {
                     document.getElementById('statusContainer').classList.add('hidden');
+                    uploadProgress.classList.add('hidden');
                 }, 2000);
 
             } catch (error) {
@@ -252,6 +381,7 @@
                 document.getElementById('errorMessage').classList.remove('hidden');
                 document.getElementById('errorText').textContent = error.message;
                 document.getElementById('statusContainer').classList.add('hidden');
+                uploadProgress.classList.add('hidden');
             }
         });
     </script>
