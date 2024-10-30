@@ -10,7 +10,7 @@
 <body class="bg-gray-100 min-h-screen dark:bg-gray-900 transition-colors duration-200">
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto">
-            <!-- Theme Toggle -->
+
             <div class="flex justify-end mb-4">
                 <button id="themeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition-colors duration-200">
                     <svg id="sunIcon" class="w-6 h-6 text-yellow-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,14 +23,14 @@
             </div>
 
             <h1 class="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">Audio Transcription Service</h1>
-            
+
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                 <form id="uploadForm" class="space-y-6">
                     <div class="space-y-4">
-                        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Select Language</label>
+                        <label for="language" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Select Language</label>
                         <select name="language" id="language" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
                             {% for code, name in languages.items() %}
-                            <option value="{{ code }}">{{ name }}</option>
+                                <option value="{{ code }}">{{ name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -53,21 +53,19 @@
                             <p class="text-xs mt-1">Supported formats: WAV, MP3, OGG, M4A</p>
                         </div>
 
-                        <!-- Audio Preview -->
                         <div id="audioPreview" class="hidden mt-4">
-                            <audio id="audioPlayer" controls class="w-full">
-                                Your browser does not support the audio element.
-                            </audio>
+                            <audio id="audioPlayer" controls class="w-full"></audio>
                         </div>
 
-                        <!-- Upload Progress -->
                         <div id="uploadProgress" class="hidden mt-4">
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div id="uploadProgressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                             </div>
                             <p id="uploadProgressText" class="text-xs text-center mt-1 text-gray-600 dark:text-gray-300">0%</p>
                         </div>
+
                     </div>
+
 
                     <button type="submit" id="submitButton" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
                         Transcribe Audio
@@ -82,7 +80,6 @@
                         <p id="statusText" class="text-gray-700 dark:text-gray-300 font-semibold"></p>
                         <p id="statusDetail" class="text-sm text-gray-500 dark:text-gray-400 mt-2"></p>
                     </div>
-                    <!-- Processing Progress -->
                     <div id="processingProgress" class="w-full mt-4 hidden">
                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                             <div id="processingProgressBar" class="bg-green-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
@@ -92,19 +89,18 @@
                 </div>
             </div>
 
+
             <div id="result" class="hidden">
                 <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded relative mb-4">
                     <span class="block sm:inline">Transcription completed successfully!</span>
                 </div>
-                
+
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                     <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Transcription Result</h2>
-                    
-                    <!-- Timeline View -->
+
+
                     <div id="timelineView" class="mb-4 overflow-x-auto dark:bg-gray-900">
-                        <div id="timeline" class="min-w-full">
-                            <!-- Timeline segments will be added here dynamically -->
-                        </div>
+                        <div id="timeline" class="min-w-full"></div>
                     </div>
 
                     <div id="transcriptionText" class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"></div>
@@ -119,281 +115,13 @@
                 </div>
             </div>
 
+
             <div id="errorMessage" class="hidden bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-8">
                 <span id="errorText" class="block sm:inline"></span>
             </div>
         </div>
     </div>
 
-    <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
-        const html = document.documentElement;
-
-        function updateThemeIcons() {
-            const isDark = html.classList.contains('dark');
-            sunIcon.classList.toggle('hidden', !isDark);
-            moonIcon.classList.toggle('hidden', isDark);
-        }
-
-        // Check for saved theme preference or system preference
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-        updateThemeIcons();
-
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
-            updateThemeIcons();
-        });
-
-        // Drag and Drop
-        const dropZone = document.getElementById('dropZone');
-        const audioFile = document.getElementById('audioFile');
-        const audioPreview = document.getElementById('audioPreview');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const uploadProgress = document.getElementById('uploadProgress');
-        const uploadProgressBar = document.getElementById('uploadProgressBar');
-        const uploadProgressText = document.getElementById('uploadProgressText');
-
-        // Prevent default drag behaviors
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false);
-        });
-
-        // Highlight drop zone when item is dragged over it
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, unhighlight, false);
-        });
-
-        // Handle dropped files
-        dropZone.addEventListener('drop', handleDrop, false);
-
-        function preventDefaults (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        function highlight(e) {
-            dropZone.classList.add('border-blue-600', 'bg-blue-50', 'dark:bg-gray-700');
-        }
-
-        function unhighlight(e) {
-            dropZone.classList.remove('border-blue-600', 'bg-blue-50', 'dark:bg-gray-700');
-        }
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-
-            if (files.length > 0) {
-                audioFile.files = files;
-                handleFileSelect(files[0]);
-            }
-        }
-
-        function handleFileSelect(file) {
-            if (file) {
-                document.getElementById('selectedFileName').textContent = file.name;
-                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                const sizeText = fileSizeMB > 19.5 
-                    ? `${fileSizeMB}MB (Will be split into chunks for processing)`
-                    : `${fileSizeMB}MB`;
-                document.getElementById('fileSize').textContent = `File size: ${sizeText}`;
-
-                // Show audio preview
-                const url = URL.createObjectURL(file);
-                audioPlayer.src = url;
-                audioPreview.classList.remove('hidden');
-            } else {
-                document.getElementById('selectedFileName').textContent = 'No file selected';
-                document.getElementById('fileSize').textContent = '';
-                audioPreview.classList.add('hidden');
-            }
-        }
-
-        audioFile.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            handleFileSelect(file);
-        });
-
-        function updateStatus(message, detail = '') {
-            console.log('Status Update:', message, detail);
-            const statusContainer = document.getElementById('statusContainer');
-            const statusText = document.getElementById('statusText');
-            const statusDetail = document.getElementById('statusDetail');
-            
-            statusContainer.classList.remove('hidden');
-            statusText.textContent = message;
-            statusDetail.textContent = detail;
-        }
-
-        function updateProcessingProgress(current, total) {
-            const processingProgress = document.getElementById('processingProgress');
-            const processingProgressBar = document.getElementById('processingProgressBar');
-            const processingProgressText = document.getElementById('processingProgressText');
-            
-            processingProgress.classList.remove('hidden');
-            const percentage = (current / total * 100).toFixed(0);
-            processingProgressBar.style.width = `${percentage}%`;
-            processingProgressText.textContent = `Processing chunk ${current} of ${total}`;
-        }
-
-        function createTimelineSegment(text, startTime, endTime, startSeconds) {
-            const segment = document.createElement('div');
-            segment.className = 'timeline-segment p-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
-            segment.innerHTML = `
-                <span class="text-sm text-gray-500 dark:text-gray-400">${startTime} - ${endTime}</span>
-                <p class="text-gray-700 dark:text-gray-300">${text}</p>
-            `;
-            
-            // Add click event to jump to the corresponding time in the audio
-            segment.addEventListener('click', () => {
-                if (audioPlayer) {
-                    audioPlayer.currentTime = startSeconds;
-                    audioPlayer.play();
-                }
-            });
-            
-            return segment;
-        }
-
-        function showTranscription(text, segments = []) {
-            console.log('Showing transcription:', text);
-            const resultContainer = document.getElementById('result');
-            const transcriptionText = document.getElementById('transcriptionText');
-            const timeline = document.getElementById('timeline');
-            
-            transcriptionText.textContent = text;
-            resultContainer.classList.remove('hidden');
-
-            // Clear existing timeline segments
-            timeline.innerHTML = '';
-            
-            // Add timeline segments if available
-            if (segments.length > 0) {
-                segments.forEach(segment => {
-                    const timelineSegment = createTimelineSegment(
-                        segment.text,
-                        new Date(segment.start * 1000).toISOString().substr(11, 8),
-                        new Date(segment.end * 1000).toISOString().substr(11, 8),
-                        segment.start // Pass the start time in seconds
-                    );
-                    timeline.appendChild(timelineSegment);
-                });
-                document.getElementById('timelineView').classList.remove('hidden');
-            } else {
-                document.getElementById('timelineView').classList.add('hidden');
-            }
-
-            // Add the show class to trigger the animation and make it visible
-            setTimeout(() => {
-                resultContainer.classList.add('show');
-            }, 10);
-            
-            // Setup download button
-            document.getElementById('downloadButton').onclick = function() {
-                const blob = new Blob([text], { type: 'text/plain' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'transcription.txt';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            };
-
-            // Setup copy button
-            document.getElementById('copyButton').onclick = function() {
-                navigator.clipboard.writeText(text).then(function() {
-                    alert('Transcription copied to clipboard!');
-                }).catch(function(err) {
-                    console.error('Failed to copy text: ', err);
-                    alert('Failed to copy text. Please try selecting and copying manually.');
-                });
-            };
-        }
-
-        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const file = document.getElementById('audioFile').files[0];
-            const language = document.getElementById('language').value;
-            
-            if (!file) {
-                alert('Please select an audio file');
-                return;
-            }
-
-            // Reset UI
-            const resultContainer = document.getElementById('result');
-            resultContainer.classList.remove('show');
-            resultContainer.classList.add('hidden');
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('statusContainer').classList.remove('hidden');
-            document.getElementById('processingProgress').classList.add('hidden');
-            uploadProgress.classList.remove('hidden');
-
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('language', language);
-
-            try {
-                // Show initial status
-                updateStatus('Uploading audio file...', 'This may take a moment');
-
-                const response = await fetch('/transcribe', {
-                    method: 'POST',
-                    body: formData,
-                    onUploadProgress: (progressEvent) => {
-                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        uploadProgressBar.style.width = percentCompleted + '%';
-                        uploadProgressText.textContent = percentCompleted + '%';
-                    }
-                });
-
-                const data = await response.json();
-                console.log('Server response:', data);
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'An error occurred during transcription');
-                }
-
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                // Update status with success message
-                updateStatus('Processing complete', data.status);
-
-                // Show transcription result with timeline if available
-                showTranscription(data.text, data.segments || []);
-
-                // Hide status after showing result
-                setTimeout(() => {
-                    document.getElementById('statusContainer').classList.add('hidden');
-                    uploadProgress.classList.add('hidden');
-                }, 2000);
-
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('errorMessage').classList.remove('hidden');
-                document.getElementById('errorText').textContent = error.message;
-                document.getElementById('statusContainer').classList.add('hidden');
-                uploadProgress.classList.add('hidden');
-            }
-        });
-    </script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
